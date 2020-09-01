@@ -21,7 +21,7 @@ def upload_img(request):
         original_image.thumbnail((256, 256), Image.ANTIALIAS)
         global ready_image
         ready_image = original_image.save("./static/img/" + str(uuid.uuid4()) + ".png")
-    # todo добавить else (???)
+    # todo добавить else
     return response.html(template.read())
 
 
