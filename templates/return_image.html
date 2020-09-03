@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-<img src="{{ img_path }}" alt="lorem">
+{% for elem in filenames%}
+    <img src="{{ imgpath }}{{elem}}" alt="lorem">
+    {% endfor %}
+
 </body>
 </html>
