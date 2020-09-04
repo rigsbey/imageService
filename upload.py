@@ -30,23 +30,26 @@ async def bd_adding_listener(app: Sanic, loop):
     await db.gino.create_all()
 
 
-@app.route(methods=['GET', 'POST'], uri='/upload')
-async def upload_img(request):
-    template = open(os.getcwd() + "/templates/index.html")
-    if request.files:
-        args = request.files
-        byte_image = args.getlist('file')[0][1]
-        original_image = pilimg.open(io.BytesIO(byte_image))
-        original_image.thumbnail((256, 256), pilimg.ANTIALIAS)
-        pth = "./static/img/" + str(uuid.uuid4()) + ".png"
-        original_image.save(pth)
-        # Adding to DB
-        img = await Image.create(path=pth)
-        print("\n\nAdded to DB: \n")
-        print(f'path: {img.path}')
-        print(f'id:       {img.id}')
-
-    return response.html(template.read())
+# @app.route(methods=['GET', 'POST'], uri='/upload')
+# async def upload_img(request):
+#     template = open(os.getcwd() + "/templates/index.html")
+#     if request.files:
+#         args = request.files
+#         byte_image = args.getlist('file')[0][1]
+#         original_image = pilimg.open(io.BytesIO(byte_image))
+#         original_image.thumbnail((256, 256), pilimg.ANTIALIAS)
+#         pth = "./static/img/" + str(uuid.uuid4()) + ".png"
+#         original_image.save(pth)
+# 
+#         # Adding to DB
+#         img = await Image.create(path=pth)
+#         print("\n\nAdded to DB: \n")
+#         print(f'path: {img.path}')
+#         print(f'id:       {img.id}')
+# 
+#     #     передача пути( ??? битов ??? ) с помощью мессаджа aio-pika
+# 
+#     return response.html(template.read())
 
 
 @app.listener('after_server_stop')
