@@ -36,7 +36,7 @@ async def main(loop):
         async with queue.iterator() as queue_iter:
             async for message in queue_iter:
                 async with message.process():
-                    
+
                     original_image = imgpil.open(io.BytesIO(message.body))
 
                     original_image.thumbnail((128, 128), imgpil.ANTIALIAS)
@@ -62,7 +62,7 @@ async def main(loop):
                     print("\n\nAdded to DB: \n")
                     print(f'path: {img.path}')
                     print(f'id:       {img.id}')
-                    
+
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
