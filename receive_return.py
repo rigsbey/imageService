@@ -53,11 +53,25 @@ async def upload_img(request):
 async def return_img(request):
     await db.set_bind('postgresql://kamil3:adsladsl199812@localhost:5432/gino2')
 
-    all_images_path = await Image.select('path').gino.all()
+    all_images_path_tuple = await Image.select('path').gino.all()
 
-    filenames = os.listdir(os.getcwd() + "/static/img/")
-    print(all_images_path)
-    return jinja.render("return_image.html", request, imgpath="/static/img/", filenames=filenames)
+    def convertTuple(tup):
+        str = ''.join(tup)
+        return str
+
+    # filenames = os.listdir(os.getcwd() + "/static/img/")
+    images_path_tuple_list = []
+
+    # print(convertTuple(all_images_path_tuple[0]))
+    for elem in all_images_path_tuple:
+        images_path_tuple_list.append(convertTuple(elem))
+
+    return jinja.render("return_image.html", request, filenames=images_path_tuple_list)
+
+
+@app.listener('before_server_stop')
+async def db_connection_close(app: Sanic, loop):
+    await db.pop_bind().close()
 
 
 if __name__ == "__main__":
