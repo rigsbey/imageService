@@ -1,16 +1,15 @@
 import asyncio
-import io
 import os
-import sys
-import uuid
 
 import aio_pika
-from PIL import Image
 from gino import Gino
 from sanic import Sanic, response
 from sanic_jinja2 import SanicJinja2
+from sanic_openapi import swagger_blueprint
 
 app = Sanic(__name__)
+app.blueprint(swagger_blueprint)
+
 jinja = SanicJinja2(app)
 app.static('/static', './static')
 
@@ -56,21 +55,20 @@ async def return_img(request):
     all_images_path_tuple = await Image.select('path').gino.all()
 
     def convertTuple(tup):
-        str = ''.join(tup)
-        return str
+        res_string = ''.join(tup)
+        return res_string
 
-    # filenames = os.listdir(os.getcwd() + "/static/img/")
     images_path_tuple_list = []
 
-    # print(convertTuple(all_images_path_tuple[0]))
     for elem in all_images_path_tuple:
         images_path_tuple_list.append(convertTuple(elem))
-
+    print("lenght is: ", len(all_images_path_tuple))
+    # exists() и isfile()
     return jinja.render("return_image.html", request, filenames=images_path_tuple_list)
 
 
 @app.listener('before_server_stop')
-async def db_connection_close(app: Sanic, loop):
+async def db_connection_close():
     await db.pop_bind().close()
 
 

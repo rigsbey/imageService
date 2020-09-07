@@ -1,13 +1,11 @@
 import asyncio
 import io
-import os
-import sys
 import uuid
 
 import aio_pika
-from PIL import Image as imgpil, ImageDraw
+from PIL import Image as imgPil
+from PIL import ImageDraw
 from gino import Gino
-from sanic import Sanic, response
 
 db = Gino()
 
@@ -37,13 +35,13 @@ async def main(loop):
             async for message in queue_iter:
                 async with message.process():
 
-                    original_image = imgpil.open(io.BytesIO(message.body))
+                    original_image = imgPil.open(io.BytesIO(message.body))
 
-                    original_image.thumbnail((128, 128), imgpil.ANTIALIAS)
+                    original_image.thumbnail((128, 128), imgPil.ANTIALIAS)
                     orig_img_path = "./static/img/" + str(uuid.uuid4()) + ".png"
                     original_image.save(orig_img_path)
 
-                    image = imgpil.open(orig_img_path)  # Открываем изображение
+                    image = imgPil.open(orig_img_path)  # Открываем изображение
                     draw = ImageDraw.Draw(image)  # Создаем инструмент для рисования
                     width = image.size[0]  # Определяем ширину
                     height = image.size[1]  # Определяем высоту
@@ -57,6 +55,7 @@ async def main(loop):
                             draw.point((x, y), (255 - r, 255 - g, 255 - b))
 
                     image.save(orig_img_path)
+
                     # Adding to DB
                     img = await Image.create(path=orig_img_path)
                     print("\n\nAdded to DB: \n")
