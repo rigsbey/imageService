@@ -21,7 +21,7 @@ class Image(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     path = db.Column(db.Unicode(), default='noname')
 
-
+# описать входные и выходные данные
 @app.route(methods=['GET', 'POST'], uri='/upload')
 async def upload_img(request):
     loop = asyncio.get_event_loop()
@@ -47,7 +47,7 @@ async def upload_img(request):
 
     return response.html(template.read())
 
-
+# описать входные и выходные данные
 @app.route(methods=['GET', 'POST'], uri='/images')
 async def return_img(request):
     await db.set_bind('postgresql://kamil3:adsladsl199812@localhost:5432/gino2')
