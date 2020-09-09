@@ -5,7 +5,7 @@ import aio_pika
 from gino import Gino
 from sanic import Sanic, response
 from sanic_jinja2 import SanicJinja2
-from sanic_openapi import swagger_blueprint, doc
+from sanic_openapi import doc, swagger_blueprint
 
 app = Sanic(__name__)
 app.blueprint(swagger_blueprint)

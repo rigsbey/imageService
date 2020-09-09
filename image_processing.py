@@ -2,10 +2,11 @@ import asyncio
 import io
 import uuid
 
-import aio_pika
+from gino import Gino
 from PIL import Image as imgPil
 from PIL import ImageDraw
-from gino import Gino
+
+import aio_pika
 
 db = Gino()
 
