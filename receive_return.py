@@ -5,7 +5,7 @@ import aio_pika
 from gino import Gino
 from sanic import Sanic, response
 from sanic_jinja2 import SanicJinja2
-from sanic_openapi import swagger_blueprint
+from sanic_openapi import swagger_blueprint, doc
 
 app = Sanic(__name__)
 app.blueprint(swagger_blueprint)
@@ -21,8 +21,11 @@ class Image(db.Model):
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
     path = db.Column(db.Unicode(), default='noname')
 
-# описать входные и выходные данные
+
 @app.route(methods=['GET', 'POST'], uri='/upload')
+@doc.consumes(
+    doc.File(name="file"), location="formData", content_type="multipart/form-data"
+)
 async def upload_img(request):
     loop = asyncio.get_event_loop()
 
@@ -47,8 +50,9 @@ async def upload_img(request):
 
     return response.html(template.read())
 
-# описать входные и выходные данные
+
 @app.route(methods=['GET', 'POST'], uri='/images')
+@doc.consumes(doc.JsonBody({"images": doc.String("Modified images")}), location="body", content_type="text/html")
 async def return_img(request):
     await db.set_bind('postgresql://kamil3:adsladsl199812@localhost:5432/gino2')
 
