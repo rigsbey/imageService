@@ -1,0 +1,55 @@
+output-format: grouped
+
+autodetect: false
+strictness: veryhigh
+doc-warnings: false
+test-warnings: true
+max-line-length: 120
+
+ignore-paths:
+    - venv
+    - env
+    - .venv
+    - .env
+    - build
+    - opencv
+    - database
+    - alembic
+    - migrations
+    - tests
+
+pep8:
+    full: true
+    disable:
+        - D100
+        - D101
+        - D102
+        - D103
+        - D105
+        - D205
+        - D400
+        - N802
+        - E128
+        - E124
+        - E131
+        - E122
+
+pylint:
+    disable:
+        - too-few-public-methods
+        - invalid-name
+        - no-self-use
+        - no-member
+        - ungrouped-imports
+        - redefined-outer-name
+
+mccabe:
+    disable:
+        - MC0001
+
+pyflakes:
+    disable:
+        - F999
+
+dodgy:
+    run: false
