@@ -1,15 +1,14 @@
 [tool.poetry]
-name = "asyncio"
+name = "poetry_client"
 version = "0.1.0"
 description = ""
 authors = ["rigsbey <ab.kam@yandex.ru>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-uuid = "^1.30"
+asyncio = "^3.4.3"
 aio_pika = "^6.7.0"
-pillow = "^7.2.0"
-Gino = "^1.0.1"
+gino = "^1.0.1"
 sanic = "^20.6.3"
 sanic_jinja2 = "^0.8.0"
 sanic_openapi = "^0.6.2"

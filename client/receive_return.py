@@ -33,20 +33,24 @@ async def upload_img(request):
     if request.files:
         args = request.files
         byte_image = args.getlist('file')[0][1]
-        #     подключение к aio-pika, создание очереди  и пеердача в очередь [путь или набор байтов]
-        connection = await aio_pika.connect_robust(
-            "amqp://guest:guest@localhost/", loop=loop
-        )
-        async with connection:
-            routing_key = "image_path"  # название очереди
-            # создание очереди
-            channel = await connection.channel()
-
-            await channel.default_exchange.publish(
-                aio_pika.Message(byte_image),
-                routing_key=routing_key,
+        try:
+            await asyncio.sleep(7)
+            connection = await aio_pika.connect_robust(
+                "amqp://guest:guest@rabbitmq", loop=loop
             )
-        await connection.close()
+            async with connection:
+                routing_key = "image_path"  # название очереди
+                # создание очереди
+                channel = await connection.channel()
+
+                await channel.default_exchange.publish(
+                    aio_pika.Message(byte_image),
+                    routing_key=routing_key,
+                )
+            print("added to queue")
+            await connection.close()
+        except Exception as error:
+            print('Error connecting rabbitmq.', error)
 
     return response.html(template.read())
 
@@ -54,7 +58,13 @@ async def upload_img(request):
 @app.route(methods=['GET', 'POST'], uri='/images')
 @doc.consumes(doc.JsonBody({"images": doc.String("Modified images")}), location="body", content_type="text/html")
 async def return_img(request):
-    await db.set_bind('postgresql://kamil3:adsladsl199812@localhost:5432/gino2')
+    try:
+        await asyncio.sleep(7)
+        await db.set_bind('postgresql://kamil3:adsladsl199812@postgres/gino2')
+
+        print("bd started")
+    except Exception as error:
+        print('Error connecting database', error)
 
     all_images_path_tuple = await Image.select('path').gino.all()
 
